@@ -35,16 +35,21 @@ class Book {
         self.nameOfBook = nameOfBook
     }
     
-    func Book(authorOfBook: String,
-              nameOfBook: String,
-              colorOfBook: UIColor) {
-        print(authorOfBook, nameOfBook, colorOfBook)
+    func printInfoAboytBook() {
+        print("""
+            Автор книги \(self.authorOfBook).
+            Название книги \(nameOfBook)
+            Цвет обложки \(self.colorOfBook)
+            """)
+    }
+    func changeColorOfBook(newValue: UIColor) { //функция для 8 задания
+        self.colorOfBook = newValue
     }
 }
 
-Book(authorOfBook: "Уоллс",
-     nameOfBook: "Замок из стекла",
-     colorOfBook: .brown)
+let firstBook = Book.init(authorOfBook: "Абракадабра", nameOfBook: "ВтораяАбракадабра", colorOfBook: .black)
+
+firstBook.changeColorOfBook(newValue: .yellow) // задание 8
 
 struct ElectronicBook {
     var authorOfElectronicBook: String
@@ -52,43 +57,58 @@ struct ElectronicBook {
     var colorOfElectronicBook: UIColor
 }
 
-ElectronicBook(authorOfElectronicBook: "Достоевский",
-               nameOfElectronicBook: "Мертвые души",
-               colorOfElectronicBook: .blue)
-
-
 struct Library {
     var arrayOfBook: [Book] = []
     var arrayOfElectronicBook: [ElectronicBook] = []
 }
 
-func printFirstBooks() -> ([Book], [ElectronicBook]) {
-    if printFirstBooks().0.isEmpty || printFirstBooks().1.isEmpty {
-        return(nil)
-    } else {
-        return ([Book], [ElectronicBook])
-    }
-}
+//    func deliteLibrary() {
+//        self.arrayOfBook = nil
+//        self.arrayOfElectronicBook = nil
+//    }
+//
+//func printFirstBooks() -> ([Book], [ElectronicBook]) {
+//    if self.Book.isEmpty || self.Book.ElectronicBook.isEmpty {
+//        return deliteLibrary
+//    } else {
+//        return ([Book.0], [ElectronicBook.0])
+//    }
+//}
 
 enum ALotOfBooks: CaseIterable {
     case АннаКаренина
     case Автостопомпогалактике
     case АлисавСтранечудес
+    
+    init () {
+        self = .Автостопомпогалактике
+    }
+    
+    mutating func fullOfLibrary() {
+        if self == .АннаКаренина{
+            self = .Автостопомпогалактике
+        } else if self == .Автостопомпогалактике {
+            self = .АлисавСтранечудес
+        } else if self == .АлисавСтранечудес{
+            self = .АннаКаренина
+        }
+    }
 }
+
 print(ALotOfBooks.allCases.count)
 
-func borrowBookFromLibrary(ALotOfBooks: String) {
-}
+var eBook = ALotOfBooks.Автостопомпогалактике
+var book = ALotOfBooks.АлисавСтранечудес
 
-var eBook: () = borrowBookFromLibrary(ALotOfBooks: "Автостопомпогалактике")
-var book: () = borrowBookFromLibrary(ALotOfBooks: "АлисавСтранечудес")
 
 let basicBook: Book = Book(authorOfBook: "Уоллс",
                            nameOfBook: "Замок из стекла",
                            colorOfBook: .black)
+
 let electronicBook: ElectronicBook = ElectronicBook(authorOfElectronicBook: "Достоевский",
                                                     nameOfElectronicBook: "Мертвые души",
                                                     colorOfElectronicBook: .yellow)
+
 
 //    ===============================================
 //                  Task 2: Student
@@ -118,13 +138,20 @@ let electronicBook: ElectronicBook = ElectronicBook(authorOfElectronicBook: "Д�
 //
 //================= Solution =================== */
 
-struct Student {
-    enum Speciality {
-        case адвокат
-        case агроном
-        case юрист
-        case экономист
-    }
+enum Speciality {
+    case адвокат
+    case агроном
+    case юрист
+    case экономист
+}
+
+enum ScholarshipForFunction: Int {
+    case base = 75
+    case aboveThe7 = 83
+    case onceMore = 87
+}
+
+struct student {
     var name: String
     var surName: String
     var patronymic: String
@@ -132,29 +159,86 @@ struct Student {
     var speciality: Speciality
     var bonus: Bool? = nil
     var marks = [7,8,5,6]
-}
-
-func noBonus() {
-    if let bonus = bonus, !(bonus ?? false) {
-        bonus.toggle()
+    
+    mutating func noBonus() {
+        self.bonus ?? false
+    }
+    
+    mutating func calculateAverageMark() {
+        if self.marks.reduce(0, +) / self.marks.count > Int(7.0) {
+            return self.noBonus()
+        }
+    }
+    
+    mutating func clearStudentResults() {
+        self.marks = []
+        self.average = 0
+        self.bonus = nil
+    }
+    
+    func printInfo() {
+        print("""
+            \(self.name)
+            \(self.surName)
+            \(self.patronymic)
+            \(self.average)
+            \(self.speciality)
+            \(String(describing: self.bonus))
+            \(self.marks)
+            """)
+    }
+    
+    func scholarship() -> Int {
+        switch self {
+        case .onceMore where Speciality.юрист:
+            return 87
+        case .aboveThe7 where Speciality.адвокат:
+            return 83
+        default:
+            return 75
+        }
     }
 }
 
-func calculateAverageMark() -> Int {
-    if  self.marks.reduce(0, +) / self.marks.count < 7 {
+
+
+class StudentOfClass {
+    var name: String
+    var surName: String
+    var patronymic: String
+    var average: Double = 7.0
+    var speciality: Speciality
+    var bonus: Bool? = nil
+    var marks: [Int] = [7, 8, 5, 4, 9, 10, 9]
+    
+    init(name: String,
+         surName: String,
+         patronymic: String,
+         average: Double = 7.0,
+         speciality: Speciality,
+         bonus: Bool? = nil,
+         marks: [Int] = [7, 8, 5, 4, 9, 10, 9]) {
+        
+        self.name = name
+        self.surName = surName
+        self.patronymic = patronymic
+        self.average = 7.0
+        self.speciality = speciality
+        self.bonus = nil
+        self.marks = [7, 8, 5, 4, 9, 10, 9]
     }
-    print("увы, но Вы плохо учились")
-    self.noBonus()
 }
 
-class Test {
-    func test() -> [Int] {
-        return [7,8,5,6]
-    }
-}
-calculateAverageMark()
 
-func
+var createTheStudent = student.init(name: "Peter", surName: "Ivanov", patronymic: "Ivanovich", average: 9.0, speciality: .экономист, marks: [7, 8, 5, 4, 9, 10, 9])
+
+createTheStudent.calculateAverageMark()
+print(student.init(name: "Peter", surName: "Ivanov", patronymic: "Ivanovich", average: 9.0, speciality: .экономист, marks: [7, 8, 5, 4, 9, 10, 9]).calculateAverageMark())
+
+
+createTheStudent.scholarship()
+createTheStudent.printInfo()
+createTheStudent.clearStudentResults()
 
 
 //    ===============================================
@@ -176,21 +260,59 @@ func
 //
 //================ Solution =================== */
 
-class StudentGroup {
-    var students: [Student] = []
-    var numberOfGroup: Int
+struct student2 {
+    var name: String
+    var surName: String
+    var patronymic: String
+    var average: Double = 7.0
+    var speciality: Speciality
+    var bonus: Bool? = nil
+    var marks = [7,8,5,6]
     
-    init(students: [Student] = [], numberOfGroup: Int) {
-        self.students = students
-        self.numberOfGroup = numberOfGroup
+    init(name: String, surName: String, speciality: Speciality) {
+        self.name = name
+        self.surName = surName
+        self.speciality = speciality
     }
     
-    var allGroup = StudentGroup(students: [], numberOfGroup: 1)
-    allGroup.
-    
-    for student in allGroup.students {
-    
+    class StudentGroup {
+        var students: [student2] = []
+        var headMan: String? = ""
+        var numberOfGroup: Int
+        
+        init(students: [student2] = [], numberOfGroup: Int) {
+            self.students = students
+            self.numberOfGroup = numberOfGroup
+        }
+        
+        func setStudent(_ student2: [String]) {
+            self.students.append([student2])
+        }
+        
+        func setTheHeadMan() {
+            self.headMan = "Ивано Петр Витальевич"
+        }
+        
+        func printInfoFromClass() {
+            print("""
+            \(self.students)
+            \(String(describing: self.headMan))
+            \(self.numberOfGroup)
+            """)
+        }
+    }
 }
+
+var firstStudent = StudentGroup.init(students: student2.init(name: "Петя", surName: "Яковлев", speciality: .агроном), numberOfGroup: 2)
+var secondStudent = StudentGroup.init(students: student2.init(name: "Вася", surName: "Яковлев", speciality: .адвокат), numberOfGroup: 2)
+var thirdStudent = StudentGroup.init(students: student2.init(name: "Люба", surName: "Иванова", speciality: .экономист), numberOfGroup: 2)
+
+StudentGroup.printInfoFromClass
+
+StudentGroup.setStudent.firstStudent()
+StudentGroup.setStudent.secondStudent()
+StudentGroup.setStudent.thirdStudent()
+
 
 //    ===============================================
 //                   Task 4: Speciality
