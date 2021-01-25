@@ -300,16 +300,7 @@ class Artist {
             }
         }
     }
-    var daySalary:Int {
-        get {
-            return self.weekSalary / 5
-        }
-        set {
-            if newValue < 100 {
-                self._age = newValue
-                print("Я отказываюсь выступать")
-            }
-        }
+    var daySalary:Int { self.weekSalary / 5 }
     }
     var procentOfWorkExperienceOfArtist: Int { 100 * self.workExperience / self.age }
     
@@ -375,26 +366,39 @@ class Artist {
             self.favoriteInstrument = favoriteInstrument
             super.init(name: name, countryJob: countryJob, workExperience: workExperience)
         }
-        
+    }
         override class func printInfo() {
             print("Название класса - Musician")
             
         }
-    }
-    
+        
+        
     class Paintist: Artist {
-        override class func printInfo() {
-            print("Название класса - Paintist.")
+        override var name: String {
+            if super.name = name {
+                print("Художник не хочет использовать своё родное имя")
+            }
+            return super.name.shuffled()
         }
-    }
-    
+            
+            override class func printInfo() {
+                print("Название класса - Paintist.")
+            }
+        }
     class Dancer: Artist {
+        override var daySalary: Int {
+            if super.daySalary < 100 {
+                print("Танцор отказывается выступать")
+            }
+            return super.daySalary
+        }
         override class func printInfo() {
             print("Название класса - Dancer.")
         }
     }
 }
 
+Художник не хочет использовать своё родное имя, заменяя его на сценическое, которое состоит из перемешанных букв родного имени.
 
 let firstArgumentArtist = Artist.init(name: "Petr", countryJob: .belarus, workExperience: 14)
 let secondArgumentArtist = Artist.init(name: "Vasya", weekSalary: 650, countryJob: .poland)
